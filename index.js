@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express();
 
+const bodyparser = require("body-parser")
+const User = require('./Database/query')
 const connection = require("./Database/database")
 const PORT = process.env.PORT || 8080;
 const path = require('path')
@@ -26,6 +28,9 @@ pool.connect();
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
+
+app.use(bodyparser.urlencoded())
+app.use(bodyparser.json())
 
 app.use('/', clientController);
 
