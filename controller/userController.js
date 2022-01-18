@@ -24,14 +24,17 @@ router.post('/cadastro', (req, res)=>{
 router.post('/logar', (req, res)=>{
     var {email, password} = req.body
     //SELECT * FROM users WHERE email="email informado no input" AND senha = "senha informada no input"
-    Users.findOne({where:{email: email, senha: password}}).then(resultado => {
-        if(resultado != undefined){
-            res.send("Usuário logado com sucesso!")
-            console.log(resultado)
-        }else{
-            res.send("Erro nas credenciais do usuário!")
-        }
-    })
+    if(email != '' && password != ''){
+        Users.findOne({where:{email: email, senha: password}}).then(resultado => {
+            if(resultado != undefined){
+                res.render("users/authentic", {nome: resultado.nome})
+            }else{
+                res.send("Erro nas credenciais do usuário!")
+            }
+        })
+    }else{
+        res.send("Campos de usuários não podem estar vazios.")
+    }
 })
 
 // router.get('/usuarios', (req, res) => {
