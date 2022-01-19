@@ -16,7 +16,8 @@ const Users = connection.define('users',{
   }
 })
 
-// Users.sync({force:true}).then(()=>console.log("Tabela criada com sucesso!")) <- Utilize isso para criar o banco de dados. Após criar a primeira vez, comente.
+
+//Users.sync({force:true}).then(()=>console.log("Tabela criada com sucesso!")) // <- Utilize isso para criar o banco de dados. Após criar a primeira vez, comente.
 
 
 
