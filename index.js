@@ -38,6 +38,10 @@ app.get('/', (req, res) => {
     res.render("index");
 })
 
+app.get('/:slug', (req, res) =>{
+    res.render('index')
+})
+
 app.listen(PORT, () => {
     console.log("===========> Servidor ligado! <===========")
 })
