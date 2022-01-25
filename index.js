@@ -35,7 +35,7 @@ app.set('view engine', 'ejs')
 //Usando o Express-session
 app.use(session({
     secret: "açlsdkfjçadlsfjalçfkj",
-    cookie: { maxAge: 260000000000 }
+    cookie: { maxAge: 300000 }
 }))
 
 app.use(express.static('public'));

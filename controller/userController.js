@@ -36,8 +36,15 @@ router.post('/services', upload.single('img'), async (req, res) => {
     if(usuario != undefined){
         try{
             var client = await Users.findByPk(usuario.id)
+            console.log(client)
+            var x = await fs.unlinkSync(`public/uploads/${client.image}`)
+            console.log(x)
             if(client != undefined){
-                Users.update({image: img}, {where:{nome: usuario.nome}}).then(function(rowsUpdated){res.json(rowsUpdated)}).catch(next)
+                Users.update({image: img}, {where:{nome: usuario.nome}}).then(function(rowsUpdated){
+                    res.redirect('/logar')
+                }).catch(err =>{
+                    console.log(err)
+                })
             }
         }catch(e){
             res.json({error: e})
@@ -67,6 +74,17 @@ router.post('/cadastro', (req, res)=>{
     
 })
 
+router.get('/logar', (req, res) => {
+    var user = req.session.resultado.id
+    if(user != undefined){
+        Users.findByPk(user).then(resultado => {
+            res.render('users/authentic', {nome: resultado.nome, image: resultado.image})
+        })
+    }else{
+        res.redirect('/login')
+    }
+})
+
 router.post('/logar', (req, res)=>{
     var {email, password} = req.body
     //SELECT * FROM users WHERE email="email informado no input" AND senha = "senha informada no input"
@@ -80,7 +98,7 @@ router.post('/logar', (req, res)=>{
                         id: resultado.id,
                         nome: user
                     }
-                    res.render('users/authentic', {nome: resultado.nome, image: resultado.image})
+                    res.redirect('/logar')
                 }else{
                     res.send("Credenciais invalidas")
                 }
@@ -89,12 +107,12 @@ router.post('/logar', (req, res)=>{
             }
         })
     }else{
-        res.render('users/login')
+        res.redirect('/login')
     }
 })
 
 router.get("/logout", (req, res) => {
-    req.session.usuario = undefined
+    req.session.resultado = undefined;
     res.redirect('/')
 })
 
