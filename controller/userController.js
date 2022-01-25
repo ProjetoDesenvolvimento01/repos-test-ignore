@@ -2,6 +2,20 @@ const express = require('express');
 const router = express.Router()
 const Users = require("../Database/query")
 const bcrypt = require('bcrypt')
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs')
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, "public/uploads/")
+    },
+    filename: function(req, file, cb){
+        cb(null, file.originalname + Date.now() + path.extname(file.originalname));
+    }
+})
+
+const upload = multer({ storage })
 
 router.get('/user/cadastro', (req, res) =>{
     res.render("users/cadastrar")
@@ -10,6 +24,27 @@ router.get('/user/cadastro', (req, res) =>{
 router.get('/login', (req, res) => {
     res.render("users/login")
 })
+
+router.get('/services', (req, res) => {
+    res.render("parciais/upload.ejs")
+})
+
+router.post('/services', upload.single('img'), async (req, res) => {
+    var img = req.file.filename
+    var usuario = req.session.resultado
+    console.log(usuario)
+    if(usuario != undefined){
+        try{
+            var client = await Users.findByPk(usuario.id)
+            if(client != undefined){
+                Users.update({image: img}, {where:{nome: usuario.nome}}).then(function(rowsUpdated){res.json(rowsUpdated)}).catch(next)
+            }
+        }catch(e){
+            res.json({error: e})
+        }
+    }
+})
+
 
 router.post('/cadastro', (req, res)=>{
     var {nome,email,password} = req.body
@@ -26,7 +61,7 @@ router.post('/cadastro', (req, res)=>{
                     res.send(dado)
                 })
         }else{
-            res.json({erro: "Já existe um cliente cadastrado com esses dados"})
+            res.redirect('/login')
         }
     })
     
@@ -41,7 +76,11 @@ router.post('/logar', (req, res)=>{
                 var correct = bcrypt.compareSync(password, resultado.senha)
                 var user = resultado.nome
                 if(correct){
-                    res.send("Credenciais corretas")
+                    req.session.resultado = {
+                        id: resultado.id,
+                        nome: user
+                    }
+                    res.render('users/authentic', {nome: resultado.nome, image: resultado.image})
                 }else{
                     res.send("Credenciais invalidas")
                 }
@@ -54,20 +93,9 @@ router.post('/logar', (req, res)=>{
     }
 })
 
-// router.get('/usuarios', (req, res) => {
-//     Users.findAll().then(Usuarios=>{
-//         res.json(Usuarios)
-//     })
-//
-//      Select * FROM users WHERE id = 1
-//     Users.findOne({where:{id:1}}).then(Usuarios=>{
-//         res.json(Usuarios)
-//     })
-//      
-//      Select pelo ID 
-//     Users.findByPk(1).then(Usuarios=>{
-//         res.json(Usuarios)
-//     })
-// })
+router.get("/logout", (req, res) => {
+    req.session.usuario = undefined
+    res.redirect('/')
+})
 
 module.exports = router;

@@ -1,11 +1,14 @@
+require('dotenv').config()
 const express = require('express')
 const app = express();
 
 const bodyparser = require("body-parser")
-const User = require('./Database/query')
+const User = require('./Database/query') //Realiza a criação da tabela usuários
+const adm = require('./Database/adm') //Realiza a criação da tabela adm
 const connection = require("./Database/database")
 const PORT = process.env.PORT || 8080;
 const path = require('path')
+const session = require('express-session')
 
 const clientController = require('./controller/userController')
 
@@ -29,6 +32,15 @@ pool.connect();
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
+//Usando o Express-session
+app.use(session({
+    secret: "açlsdkfjçadlsfjalçfkj",
+    cookie: { maxAge: 260000000000 }
+}))
+
+app.use(express.static('public'));
+app.use('/uploads', express.static(__dirname + 'public/uploads'))
+
 app.use(bodyparser.urlencoded())
 app.use(bodyparser.json())
 
@@ -39,7 +51,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/:slug', (req, res) =>{
-    res.render('index')
+    res.redirect('/')
 })
 
 app.listen(PORT, () => {

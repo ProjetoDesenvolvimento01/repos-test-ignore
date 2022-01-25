@@ -1,0 +1,10 @@
+<%- include('../parciais/head.ejs') %>
+
+<h1>Upload de Imagem</h1>
+<div class="mb-3">
+    <form enctype="multipart/form-data" action="/services" method="post" class="mb-3">
+        <label for="formFile" class="form-label">Insert the photo you want as a profile</label>
+        <input class="form-control" type="file" name="img" id="formFile">
+        <button class="btn btn-primary bottom mt-4" type="submit">Send picture</button>
+    </form>
+  </div>
