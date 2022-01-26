@@ -74,7 +74,7 @@ router.post('/cadastro', (req, res)=>{
     
 })
 
-router.get('/logar', (req, res) => {
+router.get('/authentic', (req, res) => {
     var user = req.session.resultado.id
     if(user != undefined){
         Users.findByPk(user).then(resultado => {
@@ -98,7 +98,7 @@ router.post('/logar', (req, res)=>{
                         id: resultado.id,
                         nome: user
                     }
-                    res.redirect('/logar')
+                    res.redirect('/authentic')
                 }else{
                     res.send("Credenciais invalidas")
                 }
