@@ -25,11 +25,18 @@ router.get('/login', (req, res) => {
     res.render("users/login")
 })
 
-router.get('/services', (req, res) => {
-    res.render("parciais/upload.ejs")
+router.get('/upload', (req, res) => {
+    var user = req.session.resultado.id
+    if(user != undefined){
+        Users.findByPk(user).then(resultado => {
+            res.render("parciais/upload.ejs", {image: resultado.image})
+        })
+    }else{
+        res.redirect('/login')
+    }
 })
 
-router.post('/services', upload.single('img'), async (req, res) => {
+router.post('/upload', upload.single('img'), async (req, res) => {
     var img = req.file.filename
     var usuario = req.session.resultado
     console.log(usuario)
@@ -41,7 +48,7 @@ router.post('/services', upload.single('img'), async (req, res) => {
             console.log(x)
             if(client != undefined){
                 Users.update({image: img}, {where:{nome: usuario.nome}}).then(function(rowsUpdated){
-                    res.redirect('/logar')
+                    res.redirect('/upload')
                 }).catch(err =>{
                     console.log(err)
                 })
@@ -86,7 +93,7 @@ router.get('/authentic', (req, res) => {
 })
 
 router.post('/logar', (req, res)=>{
-    var {email, password} = req.body
+    var {email, password, checkout} = req.body
     //SELECT * FROM users WHERE email="email informado no input" AND senha = "senha informada no input"
     if(email != '' && password != ''){
         Users.findOne({where:{email: email}}).then(resultado => {

@@ -1,4 +1,3 @@
-require('dotenv').config()
 const express = require('express')
 const app = express();
 
@@ -35,7 +34,7 @@ app.set('view engine', 'ejs')
 //Usando o Express-session
 app.use(session({
     secret: "açlsdkfjçadlsfjalçfkj",
-    cookie: { maxAge: 300000 }
+    cookie: { maxAge: 60000000000000 }
 }))
 
 app.use(express.static('public'));
@@ -47,7 +46,11 @@ app.use(bodyparser.json())
 app.use('/', clientController);
 
 app.get('/', (req, res) => {
-    res.render("index");
+    if(req.session.resultado != undefined){
+        res.redirect('/authentic')
+    }else{
+        res.render("index");
+    }
 })
 
 app.get('/:slug', (req, res) =>{

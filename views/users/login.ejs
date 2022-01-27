@@ -1,7 +1,7 @@
 <%- include("../parciais/head.ejs") %>
 
 <body>
-    <div class="card position-absolute top-50 start-50 translate-middle">
+    <div class="card position-absolute top-50 start-50 translate-middle" style="width: 25rem;">
         <form class="card-body mt-4" method="POST" action="/logar">
             <div class="mb-3">
                 <label for="email" class="form-label">Endereço de Email</label>
@@ -11,12 +11,10 @@
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="Insert your password here!">
             </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            <div class="row">
+                <button type="submit" class="col-8 mx-auto btn btn-primary">Submit</button>
+                <a class="col-8 mx-auto btn btn-danger mt-3" type="button" href="/">Cancel</a>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <a class="btn btn-danger" type="button" href="/">Cancel</a>
         </form>
     </div>
 </body>
