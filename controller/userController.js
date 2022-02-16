@@ -18,11 +18,21 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 router.get('/user/cadastro', (req, res) =>{
-    res.render("users/cadastrar")
+    var erro = req.flash("erro")
+    var nome = req.flash("nome")
+    var email = req.flash("email")
+
+    erro = (erro == undefined || erro.length == 0) ? undefined:erro
+    nome = (nome == undefined || nome.length == 0) ? undefined:nome
+    email = (email == undefined || email.length == 0) ? undefined:email
+
+    res.render("users/cadastrar", {nome: nome, email: email, erro: erro})
 })
 
 router.get('/login', (req, res) => {
-    res.render("users/login")
+    var erro = req.flash("erroLogin")
+    erro = (erro == undefined || erro.length == 0) ? undefined:erro
+    res.render("users/login", {erro: erro})
 })
 
 router.get('/upload', (req, res) => {
@@ -73,9 +83,15 @@ router.post('/cadastro', (req, res)=>{
                     senha: hash
                 }).then(dado=>{
                     res.send(dado)
+                }).catch(err => {
+                    var erro = `Erro ao cadastrar o usuário \n${err}`
+                    req.flash("erro", erro)
+                    res.redirect("/cadastro") 
                 })
         }else{
-            res.redirect('/login')
+            var erro = `Erro ao cadastrar Usuário \nUsuário já cadastrado`
+            req.flash("erro", erro)
+            res.redirect("/cadastro")
         }
     })
     
@@ -107,7 +123,9 @@ router.post('/logar', (req, res)=>{
                     }
                     res.redirect('/authentic')
                 }else{
-                    res.send("Credenciais invalidas")
+                    var erro = `Erro: Credenciais Inválidas`
+                    req.flash("erroLogin", erro)
+                    res.redirect('/login')
                 }
             }else{
                 res.send("Erro nas credenciais do usuário!")

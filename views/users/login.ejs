@@ -1,6 +1,13 @@
 <%- include("../parciais/head.ejs") %>
 
 <body>
+
+    <% if(erro){ %>
+        <div class="alert alert-danger" role="alert">
+            <%= erro %>
+        </div>
+    <% } %>
+
     <div class="card position-absolute top-50 start-50 translate-middle" style="width: 25rem;">
         <form class="card-body mt-4" method="POST" action="/logar">
             <div class="mb-3">

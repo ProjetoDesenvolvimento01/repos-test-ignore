@@ -8,6 +8,7 @@ const connection = require("./Database/database")
 const PORT = process.env.PORT || 8080;
 const path = require('path')
 const session = require('express-session')
+const flash = require('express-flash')
 
 const clientController = require('./controller/userController')
 
@@ -36,6 +37,8 @@ app.use(session({
     secret: "açlsdkfjçadlsfjalçfkj",
     cookie: { maxAge: 60000000000000 }
 }))
+
+app.use(flash())
 
 app.use(express.static('public'));
 app.use('/uploads', express.static(__dirname + 'public/uploads'))
