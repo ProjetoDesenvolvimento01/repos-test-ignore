@@ -40,7 +40,7 @@ router.get('/upload', (req, res) => {
     var user = req.session.resultado.id
     if(user != undefined){
         Users.findByPk(user).then(resultado => {
-            res.render("parciais/upload.ejs", {image: resultado.image})
+            res.render("parciais/upload.ejs", {foto: resultado.foto})
         })
     }else{
         res.redirect('/login')
@@ -55,10 +55,10 @@ router.post('/upload', upload.single('img'), async (req, res) => {
         try{
             var client = await Users.findByPk(usuario.id)
             console.log(client)
-            var x = await fs.unlinkSync(`public/uploads/${client.image}`)
+            var x = await fs.unlinkSync(`public/uploads/${client.foto}`)
             console.log(x)
             if(client != undefined){
-                Users.update({image: img}, {where:{nome: usuario.nome}}).then(function(rowsUpdated){
+                Users.update({foto: img}, {where:{nome: usuario.nome}}).then(function(rowsUpdated){
                     res.redirect('/upload')
                 }).catch(err =>{
                     console.log(err)
@@ -77,10 +77,10 @@ router.post('/cadastro', upload.single('foto'), async (req, res)=>{
 
     console.log(foto)
 
-    if(image != undefined){
+    if(foto != undefined){
         foto = foto.path.replace('public', '')
     }else{
-        foto = '/assets/noprofile.jpg'
+        foto = 'assets/noprofile.jpg'
     }
     
     Users.findOne({where:{email: email}}).then(resultado => {
@@ -91,7 +91,7 @@ router.post('/cadastro', upload.single('foto'), async (req, res)=>{
                     nome: nome,
                     email: email,
                     senha: hash,
-                    image: foto
+                    foto: foto
                 }).then(dado=>{
                     res.send(dado)
                 }).catch(err => {
@@ -112,7 +112,7 @@ router.get('/authentic', (req, res) => {
     var user = req.session.resultado.id
     if(user != undefined){
         Users.findByPk(user).then(resultado => {
-            res.render('users/authentic', {nome: resultado.nome, image: resultado.image})
+            res.render('users/authentic', {nome: resultado.nome, foto: resultado.foto})
         })
     }else{
         res.redirect('/login')

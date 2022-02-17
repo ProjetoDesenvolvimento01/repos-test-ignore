@@ -14,7 +14,7 @@ const Users = connection.define('users',{
       type: Sequelize.STRING,
       allowNull: false
   },
-  image:{
+  foto:{
     type: Sequelize.STRING
   }
 })
