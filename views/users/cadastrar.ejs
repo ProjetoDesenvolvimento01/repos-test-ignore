@@ -4,7 +4,19 @@
 <body>
     <div class="card position-absolute top-50 start-50 translate-middle" style="width: 25rem;">
         <div class="card-body">
-            <form class="container mt-4" action="/cadastro" method="POST">
+            <form class="container mt-4" action="/cadastro" method="POST" enctype="multipart/form-data" novalidate>
+                <div class="personal-image">
+                    <label class="label">
+                        <input type="file" name="foto" id="fileFoto" />
+                        <figure class="personal-figure">
+                            <img src="/assets/noprofile.jpg" id="foto" class="personal-avatar" alt="avatar">
+                            <figcaption class="personal-figcaption">
+                                <img
+                                                src="https://raw.githubusercontent.com/ThiagoLuizNunes/angular-boilerplate/master/src/assets/imgs/camera-white.png">
+                            </figcaption>
+                        </figure>
+                    </label>
+                </div>
                 <div class="mb-3">
                     <label for="name" class="form-label">Nome de Usuário</label>
                     <input type="text" class="form-control" id="nome" name="nome" aria-describedby="nametest" required/>

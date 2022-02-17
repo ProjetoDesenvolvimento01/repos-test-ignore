@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs')
+const auth = require('../middleware/auth')
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
@@ -70,8 +71,17 @@ router.post('/upload', upload.single('img'), async (req, res) => {
 })
 
 
-router.post('/cadastro', (req, res)=>{
+router.post('/cadastro', upload.single('foto'), async (req, res)=>{
     var {nome,email,password} = req.body
+    var foto = req.file
+
+    console.log(foto)
+
+    if(image != undefined){
+        foto = foto.path.replace('public', '')
+    }else{
+        foto = '/assets/noprofile.jpg'
+    }
     
     Users.findOne({where:{email: email}}).then(resultado => {
         if(resultado == undefined){
@@ -80,7 +90,8 @@ router.post('/cadastro', (req, res)=>{
                 Users.create({
                     nome: nome,
                     email: email,
-                    senha: hash
+                    senha: hash,
+                    image: foto
                 }).then(dado=>{
                     res.send(dado)
                 }).catch(err => {
@@ -123,7 +134,7 @@ router.post('/logar', (req, res)=>{
                     }
                     res.redirect('/authentic')
                 }else{
-                    var erro = `Erro: Credenciais Inválidas`
+                    var erro = `Credenciais Inválidas`
                     req.flash("erroLogin", erro)
                     res.redirect('/login')
                 }

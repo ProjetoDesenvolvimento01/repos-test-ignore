@@ -8,7 +8,7 @@ const connection = require("./Database/database")
 const PORT = process.env.PORT || 8080;
 const path = require('path')
 const session = require('express-session')
-const flash = require('express-flash')
+const flash = require('req-flash')
 
 const clientController = require('./controller/userController')
 
